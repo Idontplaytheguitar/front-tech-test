@@ -92,8 +92,17 @@ const theme = {
     ...generateValues(MAX_Z_INDEX, 10, ''),
   },
   aspectRatio: ASPECT_RATIO,
-  keyframes: KEYFRAMES,
-  animation: ANIMATIONS,
+  keyframes: {
+    ...KEYFRAMES,
+    marquee: {
+      from: {transform: 'translateX(0)'},
+      to: {transform: 'translateX(-50%)'},
+    },
+  },
+  animation: {
+    ...ANIMATIONS,
+    marquee: 'marquee 40s linear infinite',
+  },
   extend: {
     // Extending widths rather than overriding them to preserve legacy behavior and default values.
     width: {

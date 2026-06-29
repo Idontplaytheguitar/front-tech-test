@@ -13,57 +13,6 @@ type CtaProps = {
   pageId: string
 }
 
-type Palette = {
-  bg: string
-  text: string
-  muted: string
-  eyebrow: string
-  button: string
-  buttonHover: string
-  border: string
-  ring: string
-}
-
-const PALETTES: Record<string, Palette> = {
-  light: {
-    bg: 'bg-white',
-    text: 'text-neutral-900',
-    muted: 'text-neutral-600',
-    eyebrow: 'text-neutral-500',
-    button: 'bg-neutral-900 text-white',
-    buttonHover: 'hover:bg-neutral-700',
-    border: '',
-    ring: '',
-  },
-  gray: {
-    bg: 'bg-neutral-50',
-    text: 'text-neutral-900',
-    muted: 'text-neutral-600',
-    eyebrow: 'text-neutral-500',
-    button: 'bg-neutral-900 text-white',
-    buttonHover: 'hover:bg-neutral-700',
-    border: '',
-    ring: '',
-  },
-  dark: {
-    bg: 'bg-neutral-950',
-    text: 'text-white',
-    muted: 'text-neutral-300',
-    eyebrow: 'text-violet-300',
-    button: 'bg-white text-neutral-900',
-    buttonHover: 'hover:bg-violet-100',
-    border: '',
-    ring: 'ring-1 ring-white/10',
-  },
-}
-
-function paletteFor(theme: string | undefined, variant: string | undefined): Palette {
-  if (variant === 'featured') return PALETTES.dark
-  if (theme === 'theme-dark-violet') return PALETTES.dark
-  if (theme === 'theme-gray') return PALETTES.gray
-  return PALETTES.light
-}
-
 export default function CTA({block}: CtaProps) {
   const {heading, eyebrow, body = [], button, image, theme, contentAlignment, variant} = block
 
@@ -71,45 +20,74 @@ export default function CTA({block}: CtaProps) {
   const variantName = stegaClean(variant) || 'default'
   const isFeatured = variantName === 'featured'
   const isCompact = variantName === 'compact'
+  const isDark = theme?.name === 'theme-dark-violet' || isFeatured
 
-  const p = paletteFor(theme?.name, variantName)
   const hasImage = Boolean(image?.asset?._ref)
 
+  // Palette
+  const sectionBg = isDark ? 'bg-zinc-950' : 'bg-white'
+  const textColor = isDark ? 'text-white' : 'text-zinc-900'
+  const mutedColor = isDark ? 'text-zinc-400' : 'text-zinc-600'
+  const eyebrowColor = isDark ? 'text-violet-300' : 'text-zinc-500'
+  const borderClass = isDark ? 'border-zinc-800/60' : 'border-zinc-200'
+  const cardBg = isDark ? 'bg-zinc-900/40' : 'bg-white'
+
+  // Button styles
+  const buttonPrimary = isDark
+    ? 'bg-white text-zinc-900 hover:bg-zinc-200'
+    : 'bg-zinc-900 text-white hover:bg-zinc-700'
+  const buttonSecondary = isDark
+    ? 'border-zinc-700 text-zinc-300 hover:bg-zinc-900 hover:text-white'
+    : 'border-zinc-300 text-zinc-700 hover:bg-zinc-50 hover:text-zinc-900'
+
   return (
-    <section className={`${p.bg} ${p.text}`}>
+    <section className={`relative ${sectionBg} ${textColor}`}>
       <div
         className={[
           'mx-auto px-6',
-          isFeatured ? 'max-w-7xl py-28 md:py-40' : isCompact ? 'max-w-6xl py-16 md:py-20' : 'max-w-6xl py-24 md:py-32',
+          isFeatured
+            ? 'max-w-7xl py-24 md:py-32'
+            : isCompact
+              ? 'max-w-6xl py-16 md:py-20'
+              : 'max-w-6xl py-20 md:py-28',
         ].join(' ')}
       >
         <div
           className={[
             'grid items-center',
-            isFeatured ? 'gap-10 md:gap-16 md:grid-cols-12' : isCompact ? 'gap-6 md:gap-8 md:grid-cols-2' : 'gap-10 md:gap-16 md:grid-cols-2',
+            isFeatured
+              ? 'gap-8 md:gap-12 md:grid-cols-12'
+              : isCompact
+                ? 'gap-6 md:gap-8 md:grid-cols-2'
+                : 'gap-8 md:gap-12 md:grid-cols-2',
           ].join(' ')}
         >
           {/* Text column */}
           <div className={isImageFirst ? 'md:order-2' : 'md:order-1'}>
             {eyebrow && (
-              <p
+              <div
                 className={[
-                  'mb-4 text-xs font-medium uppercase tracking-[0.2em]',
-                  p.eyebrow,
+                  'inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-medium backdrop-blur',
+                  isDark
+                    ? 'border-zinc-800 bg-zinc-900/60 text-zinc-300'
+                    : 'border-zinc-200 bg-zinc-50 text-zinc-600',
                 ].join(' ')}
               >
+                {eyebrow.includes('★') && (
+                  <span className="h-1.5 w-1.5 rounded-full bg-gradient-to-r from-violet-400 to-fuchsia-400" />
+                )}
                 {eyebrow}
-              </p>
+              </div>
             )}
             {heading && (
               <h2
                 className={[
-                  'font-semibold tracking-tight text-balance',
+                  'mt-6 font-semibold tracking-tighter text-balance',
                   isFeatured
-                    ? 'text-4xl md:text-5xl lg:text-7xl leading-[1.05]'
+                    ? 'text-4xl md:text-5xl lg:text-6xl leading-[1.05]'
                     : isCompact
                       ? 'text-2xl md:text-3xl leading-tight'
-                      : 'text-3xl md:text-5xl leading-[1.1]',
+                      : 'text-3xl md:text-4xl lg:text-5xl leading-[1.1]',
                 ].join(' ')}
               >
                 {heading}
@@ -118,9 +96,13 @@ export default function CTA({block}: CtaProps) {
             {body && body.length > 0 && (
               <div
                 className={[
-                  'mt-6 leading-relaxed',
-                  isFeatured ? 'text-lg md:text-xl max-w-xl' : isCompact ? 'text-sm' : 'text-base md:text-lg',
-                  p.muted,
+                  'mt-5 leading-relaxed',
+                  isFeatured
+                    ? 'text-lg max-w-xl'
+                    : isCompact
+                      ? 'text-sm'
+                      : 'text-base md:text-lg',
+                  mutedColor,
                 ].join(' ')}
               >
                 <PortableText
@@ -130,14 +112,19 @@ export default function CTA({block}: CtaProps) {
               </div>
             )}
             {button?.buttonText && button?.link && (
-              <div className={isCompact ? 'mt-5' : 'mt-10'}>
+              <div className={isCompact ? 'mt-5' : 'mt-8'}>
                 <ResolvedLink
                   link={button?.link}
                   className={[
                     'inline-flex items-center gap-2 rounded-full font-medium transition-colors duration-200',
-                    p.button,
-                    p.buttonHover,
-                    isFeatured ? 'px-7 py-3.5 text-base' : isCompact ? 'px-5 py-2 text-sm' : 'px-6 py-3 text-sm',
+                    isFeatured ? buttonPrimary : buttonSecondary,
+                    'border',
+                    borderClass,
+                    isFeatured
+                      ? 'px-6 py-3 text-sm'
+                      : isCompact
+                        ? 'px-4 py-2 text-xs'
+                        : 'px-5 py-2.5 text-sm',
                   ].join(' ')}
                 >
                   {button?.buttonText}
@@ -151,23 +138,34 @@ export default function CTA({block}: CtaProps) {
           {hasImage ? (
             <div
               className={[
-                'relative overflow-hidden rounded-2xl',
+                'relative overflow-hidden rounded-2xl border',
+                borderClass,
                 isFeatured
-                  ? `md:col-span-7 aspect-[16/10] shadow-2xl ${p.ring}`
+                  ? `md:col-span-7 aspect-[16/10] ${cardBg} shadow-2xl`
                   : isCompact
-                    ? 'aspect-[4/3] shadow-md'
-                    : 'aspect-[16/10] shadow-xl',
+                    ? `aspect-[4/3] ${cardBg} shadow-md`
+                    : `aspect-[16/10] ${cardBg} shadow-xl`,
                 isImageFirst ? 'md:order-1' : 'md:order-2',
               ].join(' ')}
             >
-              <SanityImage
-                id={image!.asset!._ref}
-                alt={heading || 'Project screenshot'}
-                width={1200}
-                height={800}
-                mode="cover"
-                className="h-full w-full object-cover"
-              />
+              <div className="group h-full w-full">
+                <SanityImage
+                  id={image!.asset!._ref}
+                  alt={heading || 'Project screenshot'}
+                  width={1200}
+                  height={800}
+                  mode="cover"
+                  className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
+                />
+                {/* Gradient overlay */}
+                <div
+                  aria-hidden="true"
+                  className={[
+                    'absolute inset-0 bg-gradient-to-t via-transparent to-transparent',
+                    isDark ? 'from-zinc-950/30' : 'from-white/10',
+                  ].join(' ')}
+                />
+              </div>
             </div>
           ) : null}
         </div>

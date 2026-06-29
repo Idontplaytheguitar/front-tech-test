@@ -1,9 +1,11 @@
 'use client'
 
+import {Fragment} from 'react'
 import {SanityDocument} from 'next-sanity'
 import {useOptimistic} from 'next-sanity/hooks'
 
 import BlockRenderer from '@/app/components/BlockRenderer'
+import TechMarquee from '@/app/components/TechMarquee'
 import {GetPageQueryResult} from '@/sanity.types'
 import {dataAttr} from '@/sanity/lib/utils'
 import {PageBuilderSection} from '@/sanity/lib/types'
@@ -41,13 +43,15 @@ function RenderSections({
       }).toString()}
     >
       {pageBuilderSections.map((block: PageBuilderSection, index: number) => (
-        <BlockRenderer
-          key={block._key}
-          index={index}
-          block={block}
-          pageId={page._id}
-          pageType={page._type}
-        />
+        <Fragment key={block._key}>
+          <BlockRenderer
+            index={index}
+            block={block}
+            pageId={page._id}
+            pageType={page._type}
+          />
+          {index === 0 && block._type === 'centeredHero' && <TechMarquee />}
+        </Fragment>
       ))}
     </div>
   )
