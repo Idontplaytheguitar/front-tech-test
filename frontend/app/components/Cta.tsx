@@ -29,9 +29,6 @@ export default function CTA({block}: CtaProps) {
   const mutedColor = isDark ? 'text-zinc-400' : 'text-zinc-600'
   const borderClass = isDark ? 'border-zinc-800' : 'border-zinc-200'
   const cardBg = isDark ? 'bg-zinc-900/30' : 'bg-white'
-  const buttonClass = isDark
-    ? 'bg-white text-zinc-900 hover:bg-zinc-200'
-    : 'bg-zinc-900 text-white hover:bg-zinc-700'
 
   return (
     <section className={`relative ${sectionBg} ${textColor} border-t ${isDark ? 'border-zinc-900' : 'border-zinc-100'}`}>
@@ -56,7 +53,10 @@ export default function CTA({block}: CtaProps) {
           ].join(' ')}
         >
           {/* Text column */}
-          <div className={isImageFirst ? 'md:order-2' : 'md:order-1'} style={isFeatured ? {gridColumn: 'span 5 / span 5'} : undefined}>
+          <div
+            className={isImageFirst ? 'md:order-2' : 'md:order-1'}
+            style={isFeatured ? {gridColumn: 'span 5 / span 5'} : undefined}
+          >
             {eyebrow && (
               <div
                 className={[
@@ -105,9 +105,10 @@ export default function CTA({block}: CtaProps) {
                 <ResolvedLink
                   link={button?.link}
                   className={[
-                    'inline-flex items-center gap-2 rounded-full font-medium transition-colors duration-200 border',
-                    isFeatured ? buttonClass : buttonClass,
-                    borderClass,
+                    'group/btn relative inline-flex items-center gap-2 overflow-hidden rounded-lg font-medium transition-all duration-300',
+                    isDark
+                      ? 'bg-white text-zinc-900 hover:bg-zinc-100 hover:shadow-[0_0_30px_rgba(168,85,247,0.4)]'
+                      : 'bg-zinc-900 text-white hover:bg-zinc-800 hover:shadow-[0_0_30px_rgba(0,0,0,0.2)]',
                     isFeatured
                       ? 'px-6 py-3 text-sm'
                       : isCompact
@@ -115,8 +116,23 @@ export default function CTA({block}: CtaProps) {
                         : 'px-5 py-2.5 text-sm',
                   ].join(' ')}
                 >
-                  {button?.buttonText}
-                  <span aria-hidden="true">→</span>
+                  <span className="relative z-10">{button?.buttonText}</span>
+                  <span
+                    aria-hidden="true"
+                    className="relative z-10 inline-block transition-transform duration-300 ease-out group-hover/btn:translate-x-1"
+                  >
+                    →
+                  </span>
+                  <span
+                    aria-hidden="true"
+                    className={[
+                      'absolute inset-0 -translate-x-full transition-transform duration-500 ease-out group-hover/btn:translate-x-0',
+                      isDark
+                        ? 'bg-gradient-to-r from-violet-500 to-fuchsia-500'
+                        : 'bg-gradient-to-r from-violet-600 to-indigo-600',
+                    ].join(' ')}
+                    style={{zIndex: 0}}
+                  />
                 </ResolvedLink>
               </div>
             )}
@@ -126,24 +142,35 @@ export default function CTA({block}: CtaProps) {
           {hasImage ? (
             <div
               className={[
-                'group relative overflow-hidden rounded-2xl border',
+                'group relative overflow-hidden rounded-xl border',
                 borderClass,
                 isFeatured
-                  ? `aspect-[16/10] ${cardBg}`
+                  ? `aspect-[16/10] ${cardBg} shadow-[0_0_50px_rgba(0,0,0,0.3)]`
                   : isCompact
-                    ? `aspect-[4/3] ${cardBg}`
-                    : `aspect-[16/10] ${cardBg}`,
+                    ? `aspect-[4/3] ${cardBg} shadow-md`
+                    : `aspect-[16/10] ${cardBg} shadow-lg`,
                 isImageFirst ? 'md:order-1' : 'md:order-2',
               ].join(' ')}
               style={isFeatured ? {gridColumn: 'span 7 / span 7'} : undefined}
             >
+              {/* Hover border glow */}
+              <div
+                aria-hidden="true"
+                className="absolute -inset-px rounded-xl bg-gradient-to-r from-violet-500 via-fuchsia-500 to-indigo-500 opacity-0 transition-opacity duration-500 group-hover:opacity-100"
+                style={{zIndex: -1}}
+              />
               <SanityImage
                 id={image!.asset!._ref}
                 alt={heading || 'Project screenshot'}
                 width={1200}
                 height={800}
                 mode="cover"
-                className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
+                className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-105"
+              />
+              {/* Hover overlay */}
+              <div
+                aria-hidden="true"
+                className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-0 transition-opacity duration-500 group-hover:opacity-100"
               />
             </div>
           ) : null}
