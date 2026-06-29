@@ -24,41 +24,34 @@ export default function CTA({block}: CtaProps) {
 
   const hasImage = Boolean(image?.asset?._ref)
 
-  // Palette
-  const sectionBg = isDark ? 'bg-zinc-950' : 'bg-white'
+  const sectionBg = isDark ? 'bg-zinc-950' : theme?.name === 'theme-gray' ? 'bg-zinc-50' : 'bg-white'
   const textColor = isDark ? 'text-white' : 'text-zinc-900'
   const mutedColor = isDark ? 'text-zinc-400' : 'text-zinc-600'
-  const eyebrowColor = isDark ? 'text-violet-300' : 'text-zinc-500'
-  const borderClass = isDark ? 'border-zinc-800/60' : 'border-zinc-200'
-  const cardBg = isDark ? 'bg-zinc-900/40' : 'bg-white'
-
-  // Button styles
-  const buttonPrimary = isDark
+  const borderClass = isDark ? 'border-zinc-800' : 'border-zinc-200'
+  const cardBg = isDark ? 'bg-zinc-900/30' : 'bg-white'
+  const buttonClass = isDark
     ? 'bg-white text-zinc-900 hover:bg-zinc-200'
     : 'bg-zinc-900 text-white hover:bg-zinc-700'
-  const buttonSecondary = isDark
-    ? 'border-zinc-700 text-zinc-300 hover:bg-zinc-900 hover:text-white'
-    : 'border-zinc-300 text-zinc-700 hover:bg-zinc-50 hover:text-zinc-900'
 
   return (
-    <section className={`relative ${sectionBg} ${textColor}`}>
+    <section className={`relative ${sectionBg} ${textColor} border-t ${isDark ? 'border-zinc-900' : 'border-zinc-100'}`}>
       <div
         className={[
           'mx-auto px-6',
           isFeatured
-            ? 'max-w-7xl py-24 md:py-32'
+            ? 'max-w-6xl py-20 md:py-28'
             : isCompact
-              ? 'max-w-6xl py-16 md:py-20'
-              : 'max-w-6xl py-20 md:py-28',
+              ? 'max-w-4xl py-16 md:py-20'
+              : 'max-w-6xl py-16 md:py-24',
         ].join(' ')}
       >
         <div
           className={[
             'grid items-center',
             isFeatured
-              ? 'gap-8 md:gap-12 md:grid-cols-12'
+              ? 'gap-10 md:gap-16 md:grid-cols-12'
               : isCompact
-                ? 'gap-6 md:gap-8 md:grid-cols-2'
+                ? 'gap-6 md:gap-12 md:grid-cols-2'
                 : 'gap-8 md:gap-12 md:grid-cols-2',
           ].join(' ')}
         >
@@ -67,10 +60,10 @@ export default function CTA({block}: CtaProps) {
             {eyebrow && (
               <div
                 className={[
-                  'inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-medium backdrop-blur',
+                  'inline-flex items-center gap-2 rounded-full border px-3 py-1 text-xs font-medium',
                   isDark
-                    ? 'border-zinc-800 bg-zinc-900/60 text-zinc-300'
-                    : 'border-zinc-200 bg-zinc-50 text-zinc-600',
+                    ? 'border-zinc-800 bg-zinc-900/50 text-zinc-400'
+                    : 'border-zinc-200 bg-zinc-50 text-zinc-500',
                 ].join(' ')}
               >
                 {eyebrow.includes('★') && (
@@ -82,12 +75,12 @@ export default function CTA({block}: CtaProps) {
             {heading && (
               <h2
                 className={[
-                  'mt-6 font-semibold tracking-tighter text-balance',
+                  'mt-5 font-semibold tracking-tight text-balance',
                   isFeatured
-                    ? 'text-4xl md:text-5xl lg:text-6xl leading-[1.05]'
+                    ? 'text-3xl md:text-4xl lg:text-5xl leading-[1.1]'
                     : isCompact
                       ? 'text-2xl md:text-3xl leading-tight'
-                      : 'text-3xl md:text-4xl lg:text-5xl leading-[1.1]',
+                      : 'text-2xl md:text-3xl lg:text-4xl leading-[1.15]',
                 ].join(' ')}
               >
                 {heading}
@@ -96,12 +89,8 @@ export default function CTA({block}: CtaProps) {
             {body && body.length > 0 && (
               <div
                 className={[
-                  'mt-5 leading-relaxed',
-                  isFeatured
-                    ? 'text-lg max-w-xl'
-                    : isCompact
-                      ? 'text-sm'
-                      : 'text-base md:text-lg',
+                  'mt-4 leading-relaxed max-w-md',
+                  isFeatured ? 'text-base md:text-lg' : isCompact ? 'text-sm' : 'text-sm md:text-base',
                   mutedColor,
                 ].join(' ')}
               >
@@ -112,13 +101,12 @@ export default function CTA({block}: CtaProps) {
               </div>
             )}
             {button?.buttonText && button?.link && (
-              <div className={isCompact ? 'mt-5' : 'mt-8'}>
+              <div className="mt-8">
                 <ResolvedLink
                   link={button?.link}
                   className={[
-                    'inline-flex items-center gap-2 rounded-full font-medium transition-colors duration-200',
-                    isFeatured ? buttonPrimary : buttonSecondary,
-                    'border',
+                    'inline-flex items-center gap-2 rounded-full font-medium transition-colors duration-200 border',
+                    isFeatured ? buttonClass : buttonClass,
                     borderClass,
                     isFeatured
                       ? 'px-6 py-3 text-sm'
@@ -138,34 +126,24 @@ export default function CTA({block}: CtaProps) {
           {hasImage ? (
             <div
               className={[
-                'relative overflow-hidden rounded-2xl border',
+                'group relative overflow-hidden rounded-2xl border',
                 borderClass,
                 isFeatured
-                  ? `md:col-span-7 aspect-[16/10] ${cardBg} shadow-2xl`
+                  ? `md:col-span-7 aspect-[16/10] ${cardBg}`
                   : isCompact
-                    ? `aspect-[4/3] ${cardBg} shadow-md`
-                    : `aspect-[16/10] ${cardBg} shadow-xl`,
+                    ? `aspect-[4/3] ${cardBg}`
+                    : `aspect-[16/10] ${cardBg}`,
                 isImageFirst ? 'md:order-1' : 'md:order-2',
               ].join(' ')}
             >
-              <div className="group h-full w-full">
-                <SanityImage
-                  id={image!.asset!._ref}
-                  alt={heading || 'Project screenshot'}
-                  width={1200}
-                  height={800}
-                  mode="cover"
-                  className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
-                />
-                {/* Gradient overlay */}
-                <div
-                  aria-hidden="true"
-                  className={[
-                    'absolute inset-0 bg-gradient-to-t via-transparent to-transparent',
-                    isDark ? 'from-zinc-950/30' : 'from-white/10',
-                  ].join(' ')}
-                />
-              </div>
+              <SanityImage
+                id={image!.asset!._ref}
+                alt={heading || 'Project screenshot'}
+                width={1200}
+                height={800}
+                mode="cover"
+                className="h-full w-full object-cover transition-transform duration-700 ease-out group-hover:scale-[1.03]"
+              />
             </div>
           ) : null}
         </div>
