@@ -1,11 +1,5 @@
 import {ExtractPageBuilderType} from '@/sanity/lib/types'
 
-/**
- * Renders a `centeredHero` block coming from the Sanity `pageBuilder` field.
- * Maps the structured Sanity data onto a clean, modern hero layout. All visual
- * choices (eyebrow text, title, description, theme) are editable in Sanity
- * Studio; this component is only the rendering layer.
- */
 type CenteredHeroSectionProps = {
   block: ExtractPageBuilderType<'centeredHero'>
   index: number
@@ -15,34 +9,52 @@ type CenteredHeroSectionProps = {
 
 export default function CenteredHeroSection({block}: CenteredHeroSectionProps) {
   const {theme, eyebrow, title, description} = block
-
   const isDark = theme?.name === 'theme-dark-violet'
 
   return (
     <section
-      data-theme={theme?.name}
       className={[
         'relative overflow-hidden',
-        isDark ? 'bg-violet-950 text-white' : 'bg-white text-neutral-900',
+        isDark ? 'bg-neutral-950 text-white' : 'bg-white text-neutral-900',
       ].join(' ')}
     >
-      {/* Subtle background element */}
+      {/* Background gradient */}
       {isDark && (
+        <>
+          <div
+            aria-hidden="true"
+            className="absolute inset-0"
+            style={{
+              background:
+                'radial-gradient(ellipse 80% 50% at 50% 0%, rgba(124, 58, 237, 0.25) 0%, transparent 70%)',
+            }}
+          />
+          <div
+            aria-hidden="true"
+            className="absolute inset-0"
+            style={{
+              background:
+                'radial-gradient(ellipse 60% 40% at 50% 100%, rgba(99, 102, 241, 0.15) 0%, transparent 70%)',
+            }}
+          />
+        </>
+      )}
+      {!isDark && (
         <div
           aria-hidden="true"
-          className="absolute inset-0 opacity-30"
+          className="absolute inset-0"
           style={{
-            backgroundImage:
-              'radial-gradient(circle at 20% 30%, rgba(168, 85, 247, 0.4) 0%, transparent 50%), radial-gradient(circle at 80% 70%, rgba(99, 102, 241, 0.3) 0%, transparent 50%)',
+            background:
+              'radial-gradient(ellipse 80% 50% at 50% 0%, rgba(0, 0, 0, 0.03) 0%, transparent 70%)',
           }}
         />
       )}
 
-      <div className="relative mx-auto max-w-4xl px-6 py-28 md:py-40 text-center">
+      <div className="relative mx-auto max-w-5xl px-6 py-32 md:py-48 text-center">
         {eyebrow && (
           <p
             className={[
-              'mb-6 text-xs font-medium uppercase tracking-[0.2em]',
+              'mb-8 text-xs font-medium uppercase tracking-[0.2em]',
               isDark ? 'text-violet-300' : 'text-neutral-500',
             ].join(' ')}
           >
@@ -52,7 +64,7 @@ export default function CenteredHeroSection({block}: CenteredHeroSectionProps) {
         {title && (
           <h1
             className={[
-              'text-4xl md:text-6xl lg:text-7xl font-semibold leading-[1.05] tracking-tight text-balance',
+              'text-5xl md:text-7xl lg:text-8xl font-semibold leading-[0.95] tracking-tight text-balance',
               isDark ? 'text-white' : 'text-neutral-900',
             ].join(' ')}
           >
@@ -62,8 +74,8 @@ export default function CenteredHeroSection({block}: CenteredHeroSectionProps) {
         {description && (
           <p
             className={[
-              'mt-8 text-lg md:text-xl leading-relaxed max-w-2xl mx-auto text-pretty',
-              isDark ? 'text-violet-100' : 'text-neutral-600',
+              'mt-10 text-lg md:text-xl leading-relaxed max-w-2xl mx-auto text-pretty',
+              isDark ? 'text-neutral-300' : 'text-neutral-600',
             ].join(' ')}
           >
             {description}
