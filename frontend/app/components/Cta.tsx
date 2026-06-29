@@ -56,7 +56,7 @@ export default function CTA({block}: CtaProps) {
           ].join(' ')}
         >
           {/* Text column */}
-          <div className={isImageFirst ? 'md:order-2' : 'md:order-1'}>
+          <div className={isImageFirst ? 'md:order-2' : 'md:order-1'} style={isFeatured ? {gridColumn: 'span 5 / span 5'} : undefined}>
             {eyebrow && (
               <div
                 className={[
@@ -129,12 +129,13 @@ export default function CTA({block}: CtaProps) {
                 'group relative overflow-hidden rounded-2xl border',
                 borderClass,
                 isFeatured
-                  ? `md:col-span-7 aspect-[16/10] ${cardBg}`
+                  ? `aspect-[16/10] ${cardBg}`
                   : isCompact
                     ? `aspect-[4/3] ${cardBg}`
                     : `aspect-[16/10] ${cardBg}`,
                 isImageFirst ? 'md:order-1' : 'md:order-2',
               ].join(' ')}
+              style={isFeatured ? {gridColumn: 'span 7 / span 7'} : undefined}
             >
               <SanityImage
                 id={image!.asset!._ref}
