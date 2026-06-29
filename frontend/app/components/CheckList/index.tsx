@@ -25,13 +25,12 @@ export type CheckListProps = {
 }
 
 const CheckList = ({ items }: CheckListProps) => {
-  console.log(items);
   return <div className="space-y-xl">
     {items.map((item) => (
       <div key={item.id} className="flex items-center gap-s">
         <CheckMarkLight className="hidden visible-light-theme-only" />
         <CheckMarkDarkViolet className="hidden visible-dark-theme-only" />
-        <Text type="p2" className="text-primary">{item}</Text>
+        <Text type="p2" className="text-primary">{item.text}</Text>
       </div>
     ))}
   </div>

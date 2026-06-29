@@ -40,7 +40,7 @@ import {
 
 const theme = {
   screens: SCREENS,
-  colors: ({ colors }) => ({
+  colors: ({colors}: {colors: Record<string, string>}) => ({
     ...colors,
     ...COLORS,
   }),
@@ -54,8 +54,8 @@ const theme = {
     ...generateValues(MAX_SPACER, SPACER_VALUE),
     ...SPACING,
   },
-  borderColor: ({ theme }) => ({
-    ...theme('colors'),
+  borderColor: ({theme}: {theme: (path: string) => Record<string, unknown>}) => ({
+    ...(theme('colors') as Record<string, unknown>),
     DEFAULT: 'currentColor',
   }),
   borderRadius: BORDER_RADIUS,
@@ -108,7 +108,7 @@ module.exports = {
   content: ['./app/**/*.{js,ts,jsx,tsx,mdx}', './src/**/*.{js,ts,jsx,tsx,mdx}'],
   theme,
   plugins: [
-    function ({ addComponents }) {
+    function ({addComponents}: {addComponents: (components: Record<string, Record<string, unknown>>) => void}) {
       addComponents({
         // Responsive classes
 

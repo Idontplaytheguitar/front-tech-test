@@ -11,14 +11,14 @@ import { THEME_COLOR_TOKENS, THEME_DISPLAY_TOKENS } from './theme.constants';
  * @returns An object with the values as keys and the values as values.
  */
 
-export const generateValues = (max, factor = 1, unit = 'px') =>
+export const generateValues = (max: number, factor = 1, unit = 'px') =>
   new Array(max)
     .fill(0)
     .map((_, i) => i)
-    .reduce((acc, val) => {
+    .reduce((acc: Record<number, string>, val) => {
       acc[val] = `${val * factor}${unit}`;
       return acc;
-    }, {});
+    }, {} as Record<number, string>);
 
 /**
  * Generates responsive spacing utilities for margin and padding.
@@ -31,7 +31,7 @@ export const generateResponsiveSpacingUtilities = () => {
 
   const spacingMap = RESPONSIVE_SPACING_MAP;
 
-  const utilities = {};
+  const utilities: Record<string, Record<string, unknown>> = {};
 
   Object.entries(spacingMap).forEach(([spacingName, values]) => {
     // Padding utilities
@@ -188,7 +188,7 @@ export const generateResponsiveSpacingUtilities = () => {
  * @returns An object with CSS selectors as keys and style objects as values
  */
 export const generateThemeColorUtilities = () => {
-  const utilities = {};
+  const utilities: Record<string, Record<string, unknown>> = {};
 
   Object.entries(THEME_COLOR_TOKENS).forEach(([tokenName, tokenConfig]) => {
     const { property, themes } = tokenConfig;
@@ -215,7 +215,7 @@ export const generateThemeColorUtilities = () => {
 };
 
 export const generateThemeDisplayUtilities = () => {
-  const utilities = {};
+  const utilities: Record<string, Record<string, unknown>> = {};
 
   Object.entries(THEME_DISPLAY_TOKENS).forEach(([tokenName, tokenConfig]) => {
     const { property, themes } = tokenConfig;

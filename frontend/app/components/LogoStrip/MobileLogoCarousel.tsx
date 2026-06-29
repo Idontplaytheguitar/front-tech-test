@@ -1,6 +1,6 @@
 'use client';
 
-import Logo, { LogoProps } from "@/components/_rebrand/Logo";
+import Logo, { LogoProps } from "@/app/components/Logo";
 import { motion, useAnimationFrame, useMotionValue } from "framer-motion";
 import { FC, useEffect, useRef, useState } from "react";
 

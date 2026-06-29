@@ -2,6 +2,7 @@ import React from 'react'
 
 import Cta from '@/app/components/Cta'
 import Info from '@/app/components/InfoSection'
+import CenteredHeroSection from '@/app/components/CenteredHeroSection'
 import {dataAttr} from '@/sanity/lib/utils'
 import {PageBuilderSection} from '@/sanity/lib/types'
 
@@ -17,6 +18,7 @@ type BlocksType = {
 }
 
 const Blocks = {
+  centeredHero: CenteredHeroSection,
   callToAction: Cta,
   infoSection: Info,
 } as unknown as BlocksType
