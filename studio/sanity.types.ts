@@ -98,6 +98,7 @@ export type SanityImageAssetReference = {
 
 export type CallToAction = {
   _type: 'callToAction'
+  variant?: 'default' | 'featured' | 'compact'
   eyebrow?: string
   heading: string
   body?: BlockContentTextOnly

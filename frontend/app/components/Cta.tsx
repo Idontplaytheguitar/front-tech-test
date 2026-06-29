@@ -2,74 +2,136 @@ import {PortableTextBlock} from 'next-sanity'
 
 import ResolvedLink from '@/app/components/ResolvedLink'
 import PortableText from '@/app/components/PortableText'
-import Image from '@/app/components/SanityImage'
+import SanityImage from '@/app/components/SanityImage'
 import {stegaClean} from '@sanity/client/stega'
 import {ExtractPageBuilderType} from '@/sanity/lib/types'
 import ThemeWrapper from './ThemeWrapper'
-import {Text} from './Text'
-import Grid from './Grid'
 
 type CtaProps = {
   block: ExtractPageBuilderType<'callToAction'>
   index: number
-  // Needed if you want to createDataAttributes to do non-text overlays in Presentation (Visual Editing)
   pageType: string
   pageId: string
 }
 
 export default function CTA({block}: CtaProps) {
-  const {heading, eyebrow, body = [], button, image, theme, contentAlignment} = block
+  const {heading, eyebrow, body = [], button, image, theme, contentAlignment, variant} = block
 
   const isImageFirst = stegaClean(contentAlignment) === 'imageFirst'
+  const variantName = stegaClean(variant) || 'default'
+  const isFeatured = variantName === 'featured'
+  const isCompact = variantName === 'compact'
+
+  const hasImage = Boolean(image?.asset?._ref)
 
   return (
     <ThemeWrapper theme={theme?.name || 'theme-white'}>
-      <div className="relative">
-        <div className="surface-l0 absolute inset-0 bg-size-[5px] bg-[url(/images/tile-1-black.png)] dark:bg-[url(/images/tile-1-white.png)] opacity-50" />
-        <Grid className="relative py-margin-section-md">
+      <div
+        className={[
+          'relative',
+          isFeatured ? 'py-24 md:py-32' : isCompact ? 'py-12 md:py-16' : 'py-20 md:py-28',
+        ].join(' ')}
+      >
+        <div className="mx-auto max-w-6xl px-6">
           <div
-            className={`${isImageFirst && image ? 'col-span-4 md:col-span-6 md:col-start-6' : 'col-span-4 md:col-span-6 md:col-start-1'} flex flex-col justify-center gap-2 `}
+            className={[
+              'grid gap-8 md:gap-12 items-center',
+              isFeatured ? 'md:grid-cols-12' : 'md:grid-cols-2',
+              isCompact ? 'gap-6' : '',
+            ].join(' ')}
           >
-            {eyebrow && (
-              <Text type="caption1" className="text-secondary">
-                {eyebrow}
-              </Text>
-            )}
-            {heading && (
-              <Text type="display2" className="text-primary">
-                {heading}
-              </Text>
-            )}
-            {body && (
-              <div className="lg:text-left text-primary">
-                <PortableText value={body as PortableTextBlock[]} className="dark:prose-invert" />
-              </div>
-            )}
-
-            {button?.buttonText && button?.link && (
-              <div className="flex mt-4">
-                <ResolvedLink
-                  link={button?.link}
-                  className="rounded-full flex gap-2 font-mono text-sm whitespace-nowrap items-center bg-black dark:bg-white hover:bg-blue focus:bg-blue py-3 px-6 text-white dark:text-black dark:hover:text-white transition-colors duration-200"
+            {/* Text column */}
+            <div
+              className={[
+                isFeatured ? 'md:col-span-5' : '',
+                isImageFirst ? 'md:order-2' : 'md:order-1',
+              ].join(' ')}
+            >
+              {eyebrow && (
+                <p
+                  className={[
+                    'mb-3 text-xs font-medium uppercase tracking-widest',
+                    isFeatured ? 'text-violet-300' : 'text-secondary',
+                  ].join(' ')}
                 >
-                  {button?.buttonText}
-                </ResolvedLink>
+                  {eyebrow}
+                </p>
+              )}
+              {heading && (
+                <h2
+                  className={[
+                    'font-semibold text-primary text-balance',
+                    isFeatured
+                      ? 'text-4xl md:text-5xl lg:text-6xl leading-tight'
+                      : isCompact
+                        ? 'text-2xl md:text-3xl'
+                        : 'text-3xl md:text-4xl lg:text-5xl leading-tight',
+                  ].join(' ')}
+                >
+                  {heading}
+                </h2>
+              )}
+              {body && body.length > 0 && (
+                <div
+                  className={[
+                    'mt-5 text-secondary leading-relaxed',
+                    isFeatured ? 'text-lg md:text-xl max-w-xl' : 'text-base md:text-lg',
+                    isCompact ? 'mt-3 text-sm' : '',
+                  ].join(' ')}
+                >
+                  <PortableText
+                    value={body as PortableTextBlock[]}
+                    className="dark:prose-invert"
+                  />
+                </div>
+              )}
+              {button?.buttonText && button?.link && (
+                <div className={isCompact ? 'mt-4' : 'mt-8'}>
+                  <ResolvedLink
+                    link={button?.link}
+                    className={[
+                      'inline-flex items-center gap-2 rounded-full font-medium transition-all duration-200',
+                      isFeatured
+                        ? 'bg-white text-black hover:bg-violet-100 px-7 py-3.5 text-base'
+                        : isCompact
+                          ? 'bg-foreground text-background hover:opacity-80 px-5 py-2 text-sm'
+                          : 'bg-foreground text-background hover:opacity-80 px-6 py-3 text-sm',
+                    ].join(' ')}
+                  >
+                    {button?.buttonText}
+                    <span aria-hidden="true">→</span>
+                  </ResolvedLink>
+                </div>
+              )}
+            </div>
+
+            {/* Image column */}
+            {hasImage ? (
+              <div
+                className={[
+                  'relative overflow-hidden rounded-xl',
+                  isFeatured
+                    ? 'md:col-span-7 aspect-[16/10] shadow-2xl ring-1 ring-white/10'
+                    : isCompact
+                      ? 'aspect-[4/3] shadow-md'
+                      : 'aspect-[16/10] shadow-lg',
+                  isImageFirst ? 'md:order-1' : 'md:order-2',
+                ].join(' ')}
+              >
+                <SanityImage
+                  id={image!.asset!._ref}
+                  alt={heading || 'Project screenshot'}
+                  width={1200}
+                  height={800}
+                  mode="cover"
+                  className="h-full w-full object-cover"
+                />
               </div>
+            ) : (
+              <div className="hidden md:block" />
             )}
           </div>
-          <div className="col-span-4 md:col-span-6 md:col-start-7">
-            {image?.asset?._ref && (
-              <Image
-                id={image.asset._ref}
-                alt="Demo image"
-                width={704}
-                crop={image.crop}
-                mode="cover"
-                className="rounded-sm"
-              />
-            )}
-          </div>
-        </Grid>
+        </div>
       </div>
     </ThemeWrapper>
   )

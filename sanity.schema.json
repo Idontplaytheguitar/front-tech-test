@@ -555,6 +555,27 @@
             "value": "callToAction"
           }
         },
+        "variant": {
+          "type": "objectAttribute",
+          "value": {
+            "type": "union",
+            "of": [
+              {
+                "type": "string",
+                "value": "default"
+              },
+              {
+                "type": "string",
+                "value": "featured"
+              },
+              {
+                "type": "string",
+                "value": "compact"
+              }
+            ]
+          },
+          "optional": true
+        },
         "eyebrow": {
           "type": "objectAttribute",
           "value": {

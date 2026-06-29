@@ -38,9 +38,26 @@ export const callToAction = defineType({
   ],
   fields: [
     defineField({
+      name: 'variant',
+      title: 'Style variant',
+      type: 'string',
+      initialValue: 'default',
+      description: 'Controls the visual prominence of the block.',
+      options: {
+        list: [
+          {title: 'Default', value: 'default'},
+          {title: 'Featured (large, with badge)', value: 'featured'},
+          {title: 'Compact (side-by-side)', value: 'compact'},
+        ],
+        layout: 'radio',
+      },
+      group: 'designSystem',
+    }),
+    defineField({
       name: 'eyebrow',
       title: 'Eyebrow',
       type: 'string',
+      description: 'Small label above the heading. Use "★ Featured Project · ..." to mark a featured card.',
       group: 'contents',
     }),
     defineField({

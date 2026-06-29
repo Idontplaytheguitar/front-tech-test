@@ -2,14 +2,12 @@ import {type PortableTextBlock} from 'next-sanity'
 
 import PortableText from '@/app/components/PortableText'
 import {InfoSection} from '@/sanity.types'
-import {TextCombination} from '@/app/components/TextCombination'
 import Grid from './Grid'
 import ThemeWrapper from './ThemeWrapper'
 
 type InfoProps = {
   block: InfoSection
   index: number
-  // Needed if you want to createDataAttributes to do non-text overlays in Presentation (Visual Editing)
   pageId: string
   pageType: string
 }
@@ -17,23 +15,24 @@ type InfoProps = {
 export default function InfoComponent({block}: InfoProps) {
   return (
     <ThemeWrapper theme={block.theme?.name || 'theme-white'}>
-      <div className="surface-l0 -mt-header-height-mobile md:-mt-header-height-desktop pt-header-height-mobile md:pt-header-height-desktop relative">
-        <Grid className=" py-margin-section-md relative z-10">
-          <div className="col-span-4 md:col-span-6 md:col-start-4">
-            <TextCombination
-              type="d1p1"
-              align="center"
-              headingLevel="h1"
-              title={block.heading || ''}
-              description={block.subheading as string}
-            />
-            <div className="mt-4 text-primary">
-              {block?.content?.length && (
-                <PortableText className="" value={block.content as PortableTextBlock[]} />
-              )}
+      <div className="py-20 md:py-28">
+        <div className="mx-auto max-w-3xl px-6 text-center">
+          {block.heading && (
+            <h2 className="text-3xl md:text-4xl lg:text-5xl font-semibold text-primary text-balance leading-tight">
+              {block.heading}
+            </h2>
+          )}
+          {block.subheading && (
+            <p className="mt-4 text-lg md:text-xl text-secondary leading-relaxed max-w-2xl mx-auto">
+              {block.subheading}
+            </p>
+          )}
+          {block?.content?.length ? (
+            <div className="mt-8 text-secondary leading-relaxed text-base md:text-lg max-w-2xl mx-auto">
+              <PortableText className="" value={block.content as PortableTextBlock[]} />
             </div>
-          </div>
-        </Grid>
+          ) : null}
+        </div>
       </div>
     </ThemeWrapper>
   )
